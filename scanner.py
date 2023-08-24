@@ -22,6 +22,7 @@ class Scanner:
         alerts = filter(lambda x: x['type'] == 'POLICE', alerts)
         self.locations = map(lambda x: dict(lat=x['location']['y'], long=x['location']['x']), alerts)
         self.locations = list(self.locations)
+        print(self.locations)
         return self.locations
 
     def api_call(self, debug=False):
@@ -38,7 +39,7 @@ class Scanner:
             lon = entry.get('long')
             df.loc[len(df)] = [fetch_time, lat, lon]
         if debug:
-            df.to_csv('._data', index=False, header=True)
+            df.to_csv('._tiajffd', index=False, header=True)
         else:
             try:
                 df.to_csv('._data', mode='a', header=False, index=False)
