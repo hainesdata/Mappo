@@ -1,8 +1,5 @@
-#!/usr/bin/env python3
-
 import json
 import datetime
-
 import pandas as pd
 import requests
 import time
@@ -47,6 +44,7 @@ class Scanner:
                 df.to_csv('_.data', mode='a', header=False, index=False)
             except FileNotFoundError:
                 df.to_csv('_.data', index=False, header=True)
+        del df
 
     def write_content(self, debug=False, i=-1, n=-1):
         print('--------------------------------------')
@@ -69,6 +67,6 @@ class Scanner:
                 self.write_content(debug, epoch=i, length=str(n))
 
 
-if __name__ == '__main__':
-    s = Scanner()
-    s.write_content(debug=True)
+# if __name__ == '__main__':
+#     s = Scanner()
+#     s.write_content(debug=True)
