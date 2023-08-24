@@ -2,6 +2,8 @@
 
 import json
 import datetime
+
+import pandas as pd
 import requests
 import time
 
@@ -28,6 +30,16 @@ class Scanner:
     def write_content(self):
         timestamp = int(datetime.datetime.utcnow().timestamp() * 1000)
         content = f'{json.dumps(self.waze_fetch())}@{timestamp}'
+
+        fetch_data_split = content.split('@')
+        fetch_time = fetch_data_split[1]
+        fetch_data = fetch_data_split[0]
+        data = json.loads(fetch_data)
+        df = pd.DataFrame(columns=['timestamp', 'lat', 'lon'])
+        for entry in data:
+            lat = entry.get('lat')
+            lon = entry.get('long')
+            df.loc[len(df)] = [fetch_time, lat, lon]
 
         # try:
         #     with open("data.log", "a") as self.f:
@@ -63,3 +75,6 @@ class Scanner:
                 print(f'\rWaiting for API update: {120 - j}s remaining...', end='', flush=True)
             print('\n')
 
+if __name__ == '__main__':
+    s = Scanner()
+    s.write_content()
