@@ -23,3 +23,25 @@ class Dashboard:
         self.add_layout()
         self.app.run(debug=True)
 
+
+import plotly.figure_factory as ff
+import plotly.express as px
+
+class Map:
+    def __init__(self, parent):
+        self.parent = parent
+        self.ff_instance = None
+        self.data = None
+
+    def load_map(self):
+        self.ff_instance = ff.create_hexbin_mapbox(
+            data_frame=self.parent.data,
+            lat='lat',
+            lon='long',
+            nx_hexagon=10,
+            opacity=0.6,
+            labels={'color': 'Point Count'},
+        )
+
+        # TODO: Implement bounds and formatting
+        # self.ff_instance.update_layout(margin=dict(b=0, t=0, l=0, r=0))
