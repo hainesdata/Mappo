@@ -67,6 +67,6 @@ class Scanner:
                 self.write_content(debug, epoch=i, length=str(n))
 
 
-# if __name__ == '__main__':
-#     s = Scanner()
-#     s.write_content(debug=True)
+if __name__ == '__main__':
+    s = Scanner()
+    s.write_content(debug=False)
