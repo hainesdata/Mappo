@@ -38,12 +38,12 @@ class Scanner:
             lon = entry.get('long')
             df.loc[len(df)] = [fetch_time, lat, lon]
         if debug:
-            df.to_csv('_.data', index=False, header=True)
+            df.to_csv('._data', index=False, header=True)
         else:
             try:
-                df.to_csv('_.data', mode='a', header=False, index=False)
+                df.to_csv('._data', mode='a', header=False, index=False)
             except FileNotFoundError:
-                df.to_csv('_.data', index=False, header=True)
+                df.to_csv('._data', index=False, header=True)
         del df
 
     def write_content(self, debug=False, i=-1, n=-1):
