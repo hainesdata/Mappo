@@ -3,7 +3,7 @@ import datetime
 import pandas as pd
 import requests
 import time
-
+import subprocess
 
 class Scanner:
     def __init__(self):
@@ -38,16 +38,25 @@ class Scanner:
             lat = entry.get('lat')
             lon = entry.get('long')
             df.loc[len(df)] = [fetch_time, lat, lon]
+
+        out_name = '._data'
+
         if debug:
             df.to_csv('._tiajffd', index=False, header=True)
         else:
             try:
-                df.to_csv('._data', mode='a', header=False, index=False)
-            except FileNotFoundError:
+                line_count = int(subprocess.check_output(['wc', '-l', out_name]).split()[0])
+                df.to_csv(out_name, mode='a', index=False, header=False)
+            except subprocess.CalledProcessError:
                 df.to_csv('._data', index=False, header=True)
+
+            # try:
+            #     df.to_csv('._data', mode='a', index=False, header=False)
+            # except FileNotFoundError:
+            #     df.to_csv('._data', index=False, header=True)
         del df
 
-    def write_content(self, debug=False, i=-1, n=-1):
+    def write_content(self, debug=False, i=-1, n='-1'):
         print('--------------------------------------')
         print(f'Initiating API request [{i + 1}/{n}]...')
         self.api_call(debug)
@@ -65,7 +74,7 @@ class Scanner:
                 i += 1
         else:
             for i in range(n):
-                self.write_content(debug, epoch=i, length=str(n))
+                self.write_content(debug, i=i, n=str(n))
 
 
 if __name__ == '__main__':
