@@ -27,7 +27,7 @@ class Scanner:
         self.locations = list(self.locations)
         return self.locations
 
-    def write_content(self):
+    def api_call(self, debug=False):
         timestamp = int(datetime.datetime.utcnow().timestamp() * 1000)
         content = f'{json.dumps(self.waze_fetch())}@{timestamp}'
 
@@ -40,41 +40,35 @@ class Scanner:
             lat = entry.get('lat')
             lon = entry.get('long')
             df.loc[len(df)] = [fetch_time, lat, lon]
+        if debug:
+            df.to_csv('_.data', index=False, header=True)
+        else:
+            try:
+                df.to_csv('_.data', mode='a', header=False, index=False)
+            except FileNotFoundError:
+                df.to_csv('_.data', index=False, header=True)
 
-        # try:
-        #     with open("data.log", "a") as self.f:
-        #         self.f.write(f'{content}@{timestamp}\n')
-        # except FileNotFoundError:
-        #     with open("data.log", "w") as self.f:
-        #         self.f.write(f'{content}@{timestamp}\n')
+    def write_content(self, debug=False, i=-1, n=-1):
+        print('--------------------------------------')
+        print(f'Initiating API request [{i + 1}/{n}]...')
+        self.api_call(debug)
+        print('Done.')
+        for j in range(120):
+            print(f'\rWaiting for API update: {120 - j}s remaining...', end='', flush=True)
+            time.sleep(1)
+        print('\n')
 
-    def run(self, n=-1):
-        inf = False
+    def run(self, n=-1, debug=False):
         if n == -1:
-            inf = True
-        if inf:
             i = 0
             while True:
-                print('--------------------------------------')
-                print(f'Initiating API request [{i + 1}/∞]...')
-                self.write_content()
-                print('Done.')
-                for j in range(120):
-                    time.sleep(1)
-                    print(f'\rWaiting for API update: {120 - j}s remaining...', end='', flush=True)
-                print('\n')
+                self.write_content(debug=debug, i=i, n='∞')
                 i += 1
+        else:
+            for i in range(n):
+                self.write_content(debug, epoch=i, length=str(n))
 
-        for i in range(n):
-            print('--------------------------------------')
-            print(f'Initiating API request [{i + 1}/{n}]...')
-            self.write_content()
-            print('Done.')
-            for j in range(120):
-                time.sleep(1)
-                print(f'\rWaiting for API update: {120 - j}s remaining...', end='', flush=True)
-            print('\n')
 
 if __name__ == '__main__':
     s = Scanner()
-    s.write_content()
+    s.write_content(debug=True)
