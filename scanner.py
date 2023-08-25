@@ -49,11 +49,6 @@ class Scanner:
                 df.to_csv(out_name, mode='a', index=False, header=False)
             except subprocess.CalledProcessError:
                 df.to_csv('._data', index=False, header=True)
-
-            # try:
-            #     df.to_csv('._data', mode='a', index=False, header=False)
-            # except FileNotFoundError:
-            #     df.to_csv('._data', index=False, header=True)
         del df
 
     def write_content(self, debug=False, i=-1, n='-1'):

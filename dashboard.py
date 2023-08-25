@@ -23,13 +23,6 @@ class Dashboard:
             time.sleep(buffer)
 
         self.data = pd.read_csv(path)
-        # while True:
-        #     try:
-        #         self.data = pd.read_csv(path)
-        #     except FileNotFoundError:
-        #         time.sleep(1)
-        #         continue
-        #     break
         print('Data imported successfully.\n')
 
     def add_layout(self):
